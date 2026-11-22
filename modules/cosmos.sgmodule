@@ -1,0 +1,20 @@
+#!name=小宇宙 去广告 (Adblock Hub)
+#!desc=融合 103516 与可莉双源并自动修复 Surge 兼容问题。上游最新日期：2026-11-02 21:00。以 103516 为主，融合可莉独有重写规则并校验 MITM 域名。
+#!category=去广告
+#!date=2026-11-02 21:00
+#!homepage=https://github.com/xfoxtbat/surge-adblock-hub
+
+[Body Rewrite]
+http-response-jq (?i)^https:\/\/api\.xiaoyuzhoufm\.com\/v1\/related-podcast\/list$ '.data=[]'
+http-response-jq (?i)^https:\/\/api\.xiaoyuzhoufm\.com\/v1\/discovery-feed\/list '.data |= map(select(.type != "DISCOVERY_HEADER" and .type != "DISCOVERY_BANNER" and .type != "DISCOVERY_COVER_BANNER"))'
+http-response-jq (?i)^https?:\/\/api\.xiaoyuzhoufm\.com\/v1\/(related-episode|operation-resource)\/list '.data = []'
+
+[Map Local]
+(?i)^https:\/\/api\.xiaoyuzhoufm\.com\/v\d\/flash data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+(?i)^https:\/\/api\.xiaoyuzhoufm\.com\/v\d\/ai data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+(?i)^https:\/\/api\.xiaoyuzhoufm\.com\/v\d\/search\/get data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+(?i)^https:\/\/api\.xiaoyuzhoufm\.com\/v1\/category\/list-daily data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+(?i)^https?:\/\/api\.xiaoyuzhoufm\.com\/v\d\/category data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[MITM]
+hostname = %APPEND% api.xiaoyuzhoufm.com

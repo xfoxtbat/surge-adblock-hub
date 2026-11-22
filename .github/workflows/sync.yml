@@ -1,0 +1,41 @@
+name: Sync & Build Surge Modules
+
+on:
+  schedule:
+    # Run every 12 hours (UTC 02:00 and 14:00 -> CST 10:00 and 22:00)
+    - cron: "0 2,14 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run sync, audit, merge & jq validation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          jq --version
+          python3 scripts/sync_and_build.py
+
+      - name: Commit and push if changed
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No upstream or output changes detected."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add upstream/ modules/ ANALYSIS.md
+          git commit -m "chore(sync): update modules & analysis from upstream"
+          git push

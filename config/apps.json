@@ -1,0 +1,93 @@
+{
+  "repo": "xfoxtbat/surge-adblock-hub",
+  "indexes": {
+    "103516": "https://loonlab.103516.xyz/Plugin/plugins.all.json",
+    "kelee": "https://hub.kelee.one/list.json"
+  },
+  "keep_non_ad_features": true,
+  "apps": [
+    {
+      "slug": "taobao",
+      "name": "淘宝",
+      "sources": {
+        "103516": "https://loon.103516.xyz/Plugin/TaoBao.lpx",
+        "kelee": "https://kelee.one/Tool/Loon/Lpx/Taobao_remove_ads.lpx"
+      },
+      "strategy": "103516_plus_kelee_scripts",
+      "exclude_kelee_patterns": [
+        "wireless\\.home\\.newface\\.awesome\\.get"
+      ],
+      "notes": "保留 103516 的 AMDC 调度拦截与域名/图片规则，补入可莉的开屏与 poplayer 弹层脚本（拆名避免覆盖），排除易误杀首页的 newface.awesome.get。"
+    },
+    {
+      "slug": "jd",
+      "name": "京东",
+      "sources": {
+        "103516": "https://loon.103516.xyz/Plugin/JingDong.lpx",
+        "kelee": "https://kelee.one/Tool/Loon/Lpx/JD_remove_ads.lpx"
+      },
+      "strategy": "merge_103516_primary",
+      "notes": "以 103516 为主（保留比价等附加脚本），清洗方括号脚本名并去重融合可莉独有规则。"
+    },
+    {
+      "slug": "didi",
+      "name": "滴滴",
+      "sources": {
+        "103516": "https://loon.103516.xyz/Plugin/DiDi.lpx",
+        "kelee": "https://kelee.one/Tool/Loon/Lpx/DiDi_remove_ads.lpx"
+      },
+      "strategy": "merge_103516_primary",
+      "notes": "以 103516 为主（覆盖更全），补充融合可莉未重复的规则并校验 MITM 域名完整性。"
+    },
+    {
+      "slug": "amap",
+      "name": "高德地图",
+      "sources": {
+        "103516": "https://loon.103516.xyz/Plugin/Amap.lpx",
+        "kelee": "https://kelee.one/Tool/Loon/Lpx/Amap_remove_ads.lpx"
+      },
+      "strategy": "merge_103516_primary",
+      "notes": "以 103516 为主（含 AMDC 拦截与 rucu6 脚本），自动修复同名脚本冲突与方括号脚本名，并内联双方引用的外部 .jq 文件。"
+    },
+    {
+      "slug": "baidumap",
+      "name": "百度地图",
+      "sources": {
+        "103516": "https://loon.103516.xyz/Plugin/BaiduMap.lpx",
+        "kelee": "https://kelee.one/Tool/Loon/Lpx/BaiduMap_remove_ads.lpx"
+      },
+      "strategy": "merge_103516_primary",
+      "notes": "修复多数组索引 delpaths 拆分错位问题，自动补全漏掉的 maphotel.baidu.com MITM 域名。注意：可莉原版标注 App Store 版可能因 SSL Pinning 无法解密。"
+    },
+    {
+      "slug": "rednote",
+      "name": "小红书",
+      "sources": {
+        "103516": "https://loon.103516.xyz/Plugin/RedNote.lpx",
+        "kelee": "https://kelee.one/Tool/Loon/Lpx/RedPaper_remove_ads.lpx"
+      },
+      "strategy": "merge_103516_primary",
+      "notes": "以 103516 为主（保留去水印与时间显示脚本），自动修复同名信息流脚本冲突与方括号脚本名。"
+    },
+    {
+      "slug": "sf",
+      "name": "顺丰",
+      "sources": {
+        "103516": "https://loon.103516.xyz/Plugin/SF-Express.lpx",
+        "kelee": "https://kelee.one/Tool/Loon/Lpx/SF-Express_remove_ads.lpx"
+      },
+      "strategy": "merge_103516_primary",
+      "notes": "以 103516 为主，融合可莉独有规则并统一转换 response.body.mock 为 Surge Map Local。"
+    },
+    {
+      "slug": "cosmos",
+      "name": "小宇宙",
+      "sources": {
+        "103516": "https://loon.103516.xyz/Plugin/CosmosFM.lpx",
+        "kelee": "https://kelee.one/Tool/Loon/Lpx/CosmosPodcast_remove_ads.lpx"
+      },
+      "strategy": "merge_103516_primary",
+      "notes": "以 103516 为主，融合可莉独有重写规则并校验 MITM 域名。"
+    }
+  ]
+}
