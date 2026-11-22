@@ -35,6 +35,7 @@
   - 清洗方括号脚本名：`[京东比价]获取慢慢买Cookie` -> `京东比价_获取慢慢买Cookie`
   - 镜像外部脚本防 UA 拦截：`https://raw.githubusercontent.com/mw418/Loon/main/script/jd_price.js` -> `scripts/vendor/mw418_jd_price.js` (28147B)
   - 清洗方括号脚本名：`[京东比价]标题嵌入版` -> `京东比价_标题嵌入版`
+  - 镜像外部脚本防 UA 拦截：`https://raw.githubusercontent.com/wf021325/qx/master/js/jd_price.js` -> `scripts/vendor/wf021325_jd_price.js` (31557B)
   - 清洗方括号脚本名：`[京东比价]详情通知版` -> `京东比价_详情通知版`
   - 清洗方括号脚本名：`[京东比价]详情嵌入版（表格图）` -> `京东比价_详情嵌入版（表格图）`
   - 清洗方括号脚本名：`[京东比价]详情嵌入版（折线图）` -> `京东比价_详情嵌入版（折线图）`
