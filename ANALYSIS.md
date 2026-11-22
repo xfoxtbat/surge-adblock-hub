@@ -1,6 +1,6 @@
 # 上游双源去广告分析与自动修复报告
 
-> 本报告由 `scripts/sync_and_build.py` 自动生成。插件上游最新日期：**2026-11-02 21:00**
+> 本报告由 `scripts/sync_and_build.py` 自动生成。插件上游最新日期：**2026-11-22 21:00**
 > 转换规范参考：[`Script-Hub-Org/Script-Hub`](https://github.com/Script-Hub-Org/Script-Hub)（最新提交 `863858b492` · 2026-11-20 · fix(stable): deduplicate Stash category metadata）
 
 ## 1. 总览对比表
@@ -8,10 +8,9 @@
 | App | 103516 日期 / 规则数 | 可莉 日期 / 规则数 | 最终输出（Rule / Body / MapLocal / Script / MITM） | 单模块订阅 |
 |---|---|---|---|---|
 | **淘宝** (`taobao`) | 2026-11-02 (R:7 W:4 S:0) | 2026-10-02 (R:6 W:11 S:2) | 7 / 0 / 4 / 2 / 5 | [`taobao.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/taobao.sgmodule) |
-| **京东** (`jd`) | 2026-11-02 (R:1 W:7 S:7) | 2026-10-02 (R:1 W:2 S:1) | 1 / 3 / 5 / 6 / 4 | [`jd.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/jd.sgmodule) |
+| **京东** (`jd`) | 2026-11-22 (R:1 W:7 S:7) | 2026-10-02 (R:1 W:2 S:1) | 1 / 3 / 5 / 6 / 5 | [`jd.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/jd.sgmodule) |
 | **滴滴** (`didi`) | 2026-11-02 (R:43 W:48 S:0) | 2026-10-02 (R:3 W:27 S:0) | 43 / 37 / 20 / 0 / 23 | [`didi.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/didi.sgmodule) |
 | **高德地图** (`amap`) | 2026-11-02 (R:4 W:26 S:13) | 2026-10-20 (R:0 W:23 S:0) | 4 / 14 / 19 / 13 / 7 | [`amap.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/amap.sgmodule) |
-| **百度地图** (`baidumap`) | 2026-11-02 (R:0 W:9 S:0) | 2026-10-02 (R:0 W:12 S:0) | 0 / 9 / 12 / 0 / 8 | [`baidumap.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/baidumap.sgmodule) |
 | **小红书** (`rednote`) | 2026-11-02 (R:6 W:9 S:13) | 2026-10-02 (R:1 W:9 S:12) | 7 / 8 / 10 / 13 / 10 | [`rednote.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/rednote.sgmodule) |
 | **顺丰** (`sf`) | 2026-11-02 (R:0 W:8 S:0) | 2026-10-02 (R:0 W:4 S:0) | 0 / 1 / 7 / 0 / 4 | [`sf.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/sf.sgmodule) |
 | **小宇宙** (`cosmos`) | 2026-11-02 (R:0 W:7 S:0) | 2026-10-02 (R:0 W:5 S:0) | 0 / 3 / 5 / 0 / 1 | [`cosmos.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/cosmos.sgmodule) |
@@ -70,14 +69,6 @@
   - 内联外部 jq_file: updatable.jq
   - 内联外部 jq_file: search_poi_detail.jq
   - 自动消解同名脚本冲突：`高德地图_移除路线规划推广 -> 高德地图_移除路线规划推广_2; 高德地图_移除首页推广 -> 高德地图_移除首页推广_2`
-
-### 百度地图 (`baidumap`)
-- **融合策略**：`merge_103516_primary` — 修复多数组索引 delpaths 拆分错位问题，自动补全漏掉的 maphotel.baidu.com MITM 域名。注意：可莉原版标注 App Store 版可能因 SSL Pinning 无法解密。
-- **103516 体检**：AMDC拦截=`False`，注释规则=`1` 条；无结构性异常
-- **可莉 体检**：AMDC拦截=`False`，注释规则=`0` 条；发现问题：MITM 漏配域名：maphotel.baidu.com；作者标注需 IPA 签名 / SSL Unpinning（App Store 版可能无法解密）；多数组索引 delpaths（常见转换器拆分后会导致索引错位）
-- **已自动执行的修复与优化**：
-  - 修复多数组索引删除为单条原子 delpaths
-  - 自动补全漏配 MITM 域名：`maphotel.baidu.com`
 
 ### 小红书 (`rednote`)
 - **融合策略**：`merge_103516_primary` — 以 103516 为主（保留去水印与时间显示脚本），自动修复同名信息流脚本冲突与方括号脚本名。

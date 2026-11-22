@@ -54,16 +54,6 @@
       "notes": "以 103516 为主（含 AMDC 拦截与 rucu6 脚本），自动修复同名脚本冲突与方括号脚本名，并内联双方引用的外部 .jq 文件。"
     },
     {
-      "slug": "baidumap",
-      "name": "百度地图",
-      "sources": {
-        "103516": "https://loon.103516.xyz/Plugin/BaiduMap.lpx",
-        "kelee": "https://kelee.one/Tool/Loon/Lpx/BaiduMap_remove_ads.lpx"
-      },
-      "strategy": "merge_103516_primary",
-      "notes": "修复多数组索引 delpaths 拆分错位问题，自动补全漏掉的 maphotel.baidu.com MITM 域名。注意：可莉原版标注 App Store 版可能因 SSL Pinning 无法解密。"
-    },
-    {
       "slug": "rednote",
       "name": "小红书",
       "sources": {

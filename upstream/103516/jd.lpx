@@ -8,7 +8,7 @@
 #!loon_version = 3.5.3(1014)
 #!homepage = https://loonlab.103516.xyz/Plugin/
 #!icon = https://raw.githubusercontent.com/sooyaaabo/IconLibrary/main/App/JingDong.png
-#!date = 2026-11-02 21:00
+#!date = 2026-11-22 21:00
 
 # 2026-10-02 13:57:49
 # https://kelee.one/Tool/Loon/Lpx/JD_Price.lpx
@@ -33,7 +33,7 @@ JDPrice-DetailEmbed-Line = switch, false, true, tag = [京东比价]详情嵌入
 URL-REGEX, "^http:\/\/\w{32}\.jddebug\.com\/diagnose\?", REJECT
 
 [Rewrite]
-request if ${url} ~= /^https?:\/\/m\.360buyimg\.com\/mobilecms\/s1125x2436_jfs/i then reject(200)
+request if ${url} ~= /^https?:\/\/m9?\.360buyimg\.com\/mobilecms\/s1125x2436_jfs/i then reject(200)
 request if ${url} ~= /^https?:\/\/api\.m\.jd\.com\/\?loginType=11/i then reject_dict(200)
 request if ${url} ~= /^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=getWidgetV1052/i then reject(404)
 response if ${url} ~= /^https?:\/\/api\.m\.jd\.com\/client\.action\?functionId=lite_advertising/i then response.body.replace(/jdLiteAdvertisingVO/, "sooyaaabo")
@@ -61,4 +61,4 @@ response if ${url} ~= /^https?:\/\/in\.m\.jd\.com\/product\/graphext\/\d+\.html/
 response if ${url} ~= /^https?:\/\/in\.m\.jd\.com\/product\/graphext\/\d+\.html/i then script("https://loon.103516.xyz/Script/JingDong/JingDong.price.js") with enable=${JDPrice-DetailEmbed-Line}, tag="[京东比价]详情嵌入版（折线图）", timeout=60, requires_body=true
 
 [MitM]
-hostname = api.m.jd.com, in.m.jd.com, apapia-sqk-weblogic.manmanbuy.com, m.360buyimg.com
+hostname = api.m.jd.com, in.m.jd.com, apapia-sqk-weblogic.manmanbuy.com, m.360buyimg.com, m9.360buyimg.com

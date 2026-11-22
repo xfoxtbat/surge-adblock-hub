@@ -11,7 +11,7 @@
 
 ## 直接订阅链接（Surge 模块）
 
-### 8 合 1 汇总模块（推荐）
+### 7 合 1 汇总模块（推荐）
 ```text
 https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/all-in-one.sgmodule
 ```
@@ -23,7 +23,6 @@ https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/all-in
 | 京东 | `https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/jd.sgmodule` |
 | 滴滴 | `https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/didi.sgmodule` |
 | 高德地图 | `https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/amap.sgmodule` |
-| 百度地图 | `https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/baidumap.sgmodule` |
 | 小红书 | `https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/rednote.sgmodule` |
 | 顺丰 | `https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/sf.sgmodule` |
 | 小宇宙 | `https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/cosmos.sgmodule` |

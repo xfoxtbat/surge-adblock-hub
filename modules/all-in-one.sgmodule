@@ -1,7 +1,7 @@
 #!name=Surge Adblock Hub (8合1汇总)
-#!desc=自动聚合淘宝/京东/滴滴/高德/百度地图/小红书/顺丰/小宇宙双上游去广告模块并修复 Surge 兼容问题。上游最新日期：2026-11-02 21:00
+#!desc=自动聚合淘宝/京东/滴滴/高德/百度地图/小红书/顺丰/小宇宙双上游去广告模块并修复 Surge 兼容问题。上游最新日期：2026-11-22 21:00
 #!category=去广告
-#!date=2026-11-02 21:00
+#!date=2026-11-22 21:00
 #!homepage=https://github.com/xfoxtbat/surge-adblock-hub
 #!arguments=Manmanbuy-Cookie:"",JDPrice-TitleEmbed:#,JDPrice-DetailNotify:#,JDPrice-DetailEmbed-Table:"",JDPrice-DetailEmbed-Line:#,rednote-feedtime:#
 #!arguments-desc=Manmanbuy-Cookie: [京东比价]获取慢慢买Cookie\n首次使用请先打开【慢慢买】APP，提示【获取ck成功🎉】即可正常比价。\n可选值: 留空启用, # 禁用\n\nJDPrice-TitleEmbed: [京东比价]标题嵌入版\n点击商品标题即可直接查看嵌入式历史价格\n可选值: 留空启用, # 禁用\n\nJDPrice-DetailNotify: [京东比价]详情通知版\n点击商品详情页通过弹窗通知查看历史价格\n可选值: 留空启用, # 禁用\n\nJDPrice-DetailEmbed-Table: [京东比价]详情嵌入版（表格图）\n点击商品详情页即可直接查看嵌入式历史价格\n可选值: 留空启用, # 禁用\n\nJDPrice-DetailEmbed-Line: [京东比价]详情嵌入版（折线图）\n点击商品详情页即可直接查看嵌入式历史价格\n可选值: 留空启用, # 禁用\n\nrednote-feedtime: 首页笔记标题前显示时间\n是否启用首页笔记标题前显示时间\n可选值: 留空启用, # 禁用
@@ -125,15 +125,6 @@ http-response-jq (?i)^https:\/\/m5\.amap\.com\/ws\/smartui\/near_recommend\? 'de
 http-response-jq (?i)^https:\/\/m5\.amap\.com\/ws\/shield\/frogserver\/aocs\/updatable\/1\? 'delpaths([["data","adStatementConfig"],["data","adCustomerRetainArchitecture"],["data","adImEntryConfig"],["data","adVenueConfig"],["data","adPerfSwitch"],["data","EndNaviC3AdCard"],["data","infoCpcReport"],["data","hotsaleConfig"],["data","marketing_resource_config"],["data","coupon_risk_asac"],["data","commonCouponSceneLog"],["data","sug_coupon_opt"],["data","giftEntryConfig"],["data","splashscreen"],["data","SplashScreenControl"],["data","splashview_config"],["data","feedback_banner"],["data","TrainOrderBanner"],["data","nearby_business_popup"],["data","shortcut_popup_frequency"],["data","tel_retention_popup"],["data","hotel_activity"],["data","taxi_activity"],["data","hotel_privilege"],["data","sportsActivityConfig"],["data","activity_qingke_contry_control"],["data","920bestwishes"],["data","custom_consultdata","widget_guide"],["data","free_ride"],["data","homepage_resource_config"],["data","home_message_guide"],["data","hotel_tipsicon"],["data","sur_bar"],["data","nearby_map_entry_guide"],["data","comment_info"],["data","small_biz_index"],["data","small_biz_fun"],["data","setpagesearch"],["data","wallet"]])'
 http-response-jq (?i)^https:\/\/m5-zb\.amap\.com\/ws\/boss\/car\/order\/content_info\? 'delpaths([["data","lubanData","skin"],["data","lubanData","kingToolBoxBubble"],["data","lubanData","popup"]])'
 http-response-jq (?i)^https:\/\/info\.amap\.com\/ws\/shield\/search\/poi\/detail\? 'delpaths([["data","modules","combineReviews","data","write_comment","btnRightTag"],["data","modules","combineReviews","data","write_comment","title"]])'
-http-response-jq (?i)^https?:\/\/.*map\.baidu\.com\/.*govui\/rich_content '.data.posts.content=[]'
-http-response-jq (?i)^https?:\/\/httpdns\.baidubce\.com '.data["newclient.map.baidu.com"]={}'
-http-response-jq (?i)^https?:\/\/newclient\.map\.baidu\.com\/usercenter\/mine\/page 'del(.data.sport_card, .data.gold, .data.gold_coin_card, .data.shop)'
-http-response-jq (?i)^https?:\/\/newclient\.map\.baidu\.com\/living\/nearby\/hot-words\? '.Result.data=[]'
-http-response-jq (?i)^https:\/\/newclient\.map\.baidu\.com\/feed\/govui\/rich_content 'delpaths([["data"]])'
-http-response-jq (?i)^https:\/\/newclient\.map\.baidu\.com\/client\/noticebar\/get\? 'delpaths([["content","multi_data"]])'
-http-response-jq (?i)^https:\/\/newclient\.map\.baidu\.com\/(client\/)?usersystem\/mine\/page\? 'if ((getpath([]) // {}) | has("data")) then (setpath(["data"]; "{}")) else . end'
-http-response-jq (?i)^https:\/\/newclient\.map\.baidu\.com\/client\/phpui2\/\?(?:[^#?&]+&)*qt=ads&type=user_home_new_service 'delpaths([["ads"]])'
-http-response-jq (?i)^https:\/\/newclient\.map\.baidu\.com\/living\/nearby\/api\? 'delpaths([["Result","cards",1],["Result","cards",4],["Result","cards",5],["Result","cards",9]])'
 http-response-jq (?i)^https:\/\/edith\.(?:xiaohongshu|rnote)\.com\/api\/sns\/v1\/search\/banner_list$ 'if ((getpath([]) // {}) | has("data")) then (setpath(["data"]; "`{}`")) else . end'
 http-response-jq (?i)^https:\/\/edith\.(?:xiaohongshu|rnote)\.com\/api\/sns\/v1\/search\/hot_list$ 'if ((getpath(["data"]) // {}) | has("items")) then (setpath(["data","items"]; "`[]`")) else . end'
 http-response-jq (?i)^https:\/\/edith\.(?:xiaohongshu|rnote)\.com\/api\/sns\/v4\/search\/hint 'if ((getpath(["data"]) // {}) | has("hint_words")) then (setpath(["data","hint_words"]; "`[]`")) else . end'
@@ -152,7 +143,7 @@ http-response-jq (?i)^https?:\/\/api\.xiaoyuzhoufm\.com\/v1\/(related-episode|op
 (?i)^https:\/\/heic\.alicdn\.com\/imgextra\/i\d\/[A-Za-z0-9_!]+-\d+-tps-\d+-\d+\.jpg_\d+x\d*q\d+\.jpg_\.heic$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 (?i)^https:\/\/heic\.alicdn\.com\/imgextra\/i\d\/\d*\/?[\w!]+-\d-(?:octopus|tps)-(?:1080|1125)-\d{4}\.(?:jpg|png)_(?:1\d{3}|9\d{2})x(?:\d|1\d{3}|9\d{2})q[59]0 data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 (?i)^https?:\/\/gw\.alicdn\.com\/imgextra\/i\d+\/[^\/]+_!!\d+-\d+-tps-(720-1280|1080-1920|1125-1602|1242-2208)\.(jpg|png|jpeg)_[^\/]+\.webp data-type=text data="{}" status-code=200 header="Content-Type:application/json"
-(?i)^https?:\/\/m\.360buyimg\.com\/mobilecms\/s1125x2436_jfs data-type=text data="" status-code=200
+(?i)^https?:\/\/m9?\.360buyimg\.com\/mobilecms\/s1125x2436_jfs data-type=text data="" status-code=200
 (?i)^https?:\/\/api\.m\.jd\.com\/\?(?:[^#?&]+&)*loginType=11 data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 (?i)^https?:\/\/api\.m\.jd\.com\/client\.action\?(?:[^#?&]+&)*functionId=getWidgetV1052 data-type=text data="" status-code=404
 (?i)^https:\/\/api\.m\.jd\.com\/client\.action\?(?:[^#?&]+&)*functionId=(?:cartCouponRecommendGoods|intelligentRecommendSku|obtainGrowingInfo|recommendShop|searchBoxWord|stationPullService|uniformRecommend) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
@@ -196,18 +187,6 @@ http-response-jq (?i)^https?:\/\/api\.xiaoyuzhoufm\.com\/v1\/(related-episode|op
 (?i)^https:\/\/m5\.amap\.com\/ws\/faas\/amap-navigation\/main-page-assets\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 (?i)^https:\/\/m5\.amap\.com\/ws\/faas\/amap-navigation\/main-page-aiqs\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 (?i)^https:\/\/m5-zb\.amap\.com\/ws\/promotion-web\/resource(\/home)?\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
-(?i)^https?:\/\/newclient\.map\.baidu\.com\/client\/phpui.*qt=hw data-type=text data="" status-code=200
-(?i)^https?:\/\/newclient\.map\.baidu\.com\/client\/phpui2\/\?(?:[^#?&]+&)*qt=ads data-type=text data="" status-code=200
-(?i)^https?:\/\/newclient\.map\.baidu\.com\/client\/crossmarketing data-type=text data="" status-code=200
-(?i)^https?:\/\/newclient\.map\.baidu\.com\/client\/usersystem\/home\/dynamic data-type=text data="" status-code=200
-(?i)^https?:\/\/newclient\.map\.baidu\.com\/contributor-bus\/bounty\/tips data-type=text data="" status-code=200
-(?i)^https:\/\/afd\.baidu\.com\/afd\/entry\?(?:[^#?&]+&)*action=(update|query) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
-(?i)^https:\/\/yongche\.baidu\.com\/gomarketing\/api\/popup\/getentrancecordovaurl$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
-(?i)^https:\/\/yongche\.baidu\.com\/goorder\/passenger\/cobuild\/pull\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
-(?i)^https:\/\/yongche\.baidu\.com\/goorder\/passenger\/operationgirdle$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
-(?i)^https:\/\/yongche\.baidu\.com\/goorder\/passenger\/baseinfo$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
-(?i)^https:\/\/ecom\.map\.baidu\.com\/ad-ops\/afd\/popup\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
-(?i)^https:\/\/maphotel\.baidu\.com\/hotel\/goextranet\/activity\/detail\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 (?i)^https?:\/\/ci\.(?:xiaohongshu|rnote)\.com\/system_config\/watermark data-type=tiny-gif status-code=200
 (?i)^https:\/\/edith\.(?:xiaohongshu|rnote)\.com\/api\/sns\/v1\/surprisebox\/(?:get_style|open|submit_action) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 (?i)^https:\/\/www\.(?:xiaohongshu|rnote)\.com\/api\/marketing\/box\/trigger\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
@@ -268,4 +247,4 @@ http-response-jq (?i)^https?:\/\/api\.xiaoyuzhoufm\.com\/v1\/(related-episode|op
 小红书_移除评论区实况照片水印 = type=http-response, pattern=(?i)^https:\/\/edith\.(?:xiaohongshu|rnote)\.com\/api\/sns\/(?:v1\/interaction\/comment\/video\/download|v5\/note\/comment\/list|v3\/note\/comment\/sub_comments), script-path=https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/scripts/vendor/fmz200_xiaohongshu.js, requires-body=true
 
 [MITM]
-hostname = %APPEND% acs.m.taobao.com, heic.alicdn.com, gw.alicdn.com, guide-acs.m.taobao.com, poplayer.template.alibaba.com, api.m.jd.com, in.m.jd.com, apapia-sqk-weblogic.manmanbuy.com, m.360buyimg.com, 112.53.55.225, 113.46.225.*, 116.85.*, 117.51.168.*, 120.241.142.*, 120.241.143.*, 123.207.209.*, 139.199.240.84, 162.14.157.*, api.udache.com, as.xiaojukeji.com, conf.diditaxi.com.cn, ct.xiaojukeji.com, daijia.kuaidadi.com, ddpay.xiaojukeji.com, freight.xiaojukeji.com, lion.didialift.com, manhattan.webapp.xiaojukeji.com, mapi.xiaojukeji.com, res.xiaojukeji.com, htwkop-st.xiaojukeji.com, htwkop.xiaojukeji.com, travel-alioth.xiaojukeji.com, *.amap.com, m5.amap.com, ai.amap.com, m5-zb.amap.com, center.amap.com, sns.amap.com, info.amap.com, 180.76.76.200, newclient.map.baidu.com, httpdns.baidubce.com, ugc.map.baidu.com, afd.baidu.com, yongche.baidu.com, ecom.map.baidu.com, maphotel.baidu.com, ci.xiaohongshu.com, edith.xiaohongshu.com, rec.xiaohongshu.com, www.xiaohongshu.com, so.xiaohongshu.com, ci.rnote.com, edith.rnote.com, rec.rnote.com, www.rnote.com, so.rnote.com, ccsp-egmas.sf-express.com, ucmp.sf-express.com, ucmp-static.sf-express.com, mapi.sfbest.com, api.xiaoyuzhoufm.com
+hostname = %APPEND% acs.m.taobao.com, heic.alicdn.com, gw.alicdn.com, guide-acs.m.taobao.com, poplayer.template.alibaba.com, api.m.jd.com, in.m.jd.com, apapia-sqk-weblogic.manmanbuy.com, m.360buyimg.com, m9.360buyimg.com, 112.53.55.225, 113.46.225.*, 116.85.*, 117.51.168.*, 120.241.142.*, 120.241.143.*, 123.207.209.*, 139.199.240.84, 162.14.157.*, api.udache.com, as.xiaojukeji.com, conf.diditaxi.com.cn, ct.xiaojukeji.com, daijia.kuaidadi.com, ddpay.xiaojukeji.com, freight.xiaojukeji.com, lion.didialift.com, manhattan.webapp.xiaojukeji.com, mapi.xiaojukeji.com, res.xiaojukeji.com, htwkop-st.xiaojukeji.com, htwkop.xiaojukeji.com, travel-alioth.xiaojukeji.com, *.amap.com, m5.amap.com, ai.amap.com, m5-zb.amap.com, center.amap.com, sns.amap.com, info.amap.com, ci.xiaohongshu.com, edith.xiaohongshu.com, rec.xiaohongshu.com, www.xiaohongshu.com, so.xiaohongshu.com, ci.rnote.com, edith.rnote.com, rec.rnote.com, www.rnote.com, so.rnote.com, ccsp-egmas.sf-express.com, ucmp.sf-express.com, ucmp-static.sf-express.com, mapi.sfbest.com, api.xiaoyuzhoufm.com
