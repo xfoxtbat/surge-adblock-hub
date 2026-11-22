@@ -9,7 +9,7 @@
 |---|---|---|---|---|
 | **淘宝** (`taobao`) | 2026-11-02 (R:7 W:4 S:0) | 2026-10-02 (R:6 W:11 S:2) | 7 / 0 / 4 / 2 / 5 | [`taobao.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/taobao.sgmodule) |
 | **京东** (`jd`) | 2026-11-02 (R:1 W:7 S:7) | 2026-10-02 (R:1 W:2 S:1) | 1 / 3 / 5 / 6 / 4 | [`jd.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/jd.sgmodule) |
-| **滴滴** (`didi`) | 2026-11-02 (R:43 W:48 S:0) | 2026-10-02 (R:3 W:27 S:0) | 43 / 37 / 20 / 0 / 25 | [`didi.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/didi.sgmodule) |
+| **滴滴** (`didi`) | 2026-11-02 (R:43 W:48 S:0) | 2026-10-02 (R:3 W:27 S:0) | 43 / 37 / 20 / 0 / 23 | [`didi.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/didi.sgmodule) |
 | **高德地图** (`amap`) | 2026-11-02 (R:4 W:26 S:13) | 2026-10-20 (R:0 W:23 S:0) | 4 / 14 / 19 / 13 / 7 | [`amap.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/amap.sgmodule) |
 | **百度地图** (`baidumap`) | 2026-11-02 (R:0 W:9 S:0) | 2026-10-02 (R:0 W:12 S:0) | 0 / 9 / 12 / 0 / 8 | [`baidumap.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/baidumap.sgmodule) |
 | **小红书** (`rednote`) | 2026-11-02 (R:6 W:9 S:13) | 2026-10-02 (R:1 W:9 S:12) | 7 / 8 / 10 / 13 / 10 | [`rednote.sgmodule`](https://raw.githubusercontent.com/xfoxtbat/surge-adblock-hub/main/modules/rednote.sgmodule) |
@@ -23,6 +23,7 @@
 - **103516 体检**：AMDC拦截=`True`，注释规则=`12` 条；无结构性异常
 - **可莉 体检**：AMDC拦截=`False`，注释规则=`0` 条；发现问题：MITM 漏配域名：gw.alicdn.com；同名脚本冲突（Surge 后者覆盖前者）：移除淘宝开屏广告
 - **已自动执行的修复与优化**：
+  - 镜像外部脚本防 UA 拦截：`https://kelee.one/Resource/JavaScript/Taobao/Taobao_remove_ads.js` -> `scripts/vendor/kelee_Taobao_remove_ads.js` (3061B)
   - 自动消解同名脚本冲突：`移除淘宝开屏广告 -> 移除淘宝开屏广告_2`
 
 ### 京东 (`jd`)
@@ -31,18 +32,22 @@
 - **可莉 体检**：AMDC拦截=`False`，注释规则=`0` 条；无结构性异常
 - **已自动执行的修复与优化**：
   - 清洗方括号脚本名：`[京东]移除广告` -> `京东_移除广告`
+  - 镜像外部脚本防 UA 拦截：`https://rucu6.pages.dev/Scripts/jingdong.js` -> `scripts/vendor/rucu6_jingdong.js` (9554B)
   - 清洗方括号脚本名：`[京东比价]获取慢慢买Cookie` -> `京东比价_获取慢慢买Cookie`
+  - 镜像外部脚本防 UA 拦截：`https://raw.githubusercontent.com/mw418/Loon/main/script/jd_price.js` -> `scripts/vendor/mw418_jd_price.js` (28147B)
   - 清洗方括号脚本名：`[京东比价]标题嵌入版` -> `京东比价_标题嵌入版`
   - 清洗方括号脚本名：`[京东比价]详情通知版` -> `京东比价_详情通知版`
   - 清洗方括号脚本名：`[京东比价]详情嵌入版（表格图）` -> `京东比价_详情嵌入版（表格图）`
   - 清洗方括号脚本名：`[京东比价]详情嵌入版（折线图）` -> `京东比价_详情嵌入版（折线图）`
+  - 镜像外部脚本防 UA 拦截：`https://loon.103516.xyz/Script/JingDong/JingDong.price.js` -> `scripts/vendor/103516_JingDong.price.js` (25021B)
 
 ### 滴滴 (`didi`)
-- **融合策略**：`merge_103516_primary` — 以 103516 为主（覆盖更全），补充融合可莉未重复的规则并校验 MITM 域名完整性。
+- **融合策略**：`merge_103516_primary` — 以 103516 为主（覆盖更全），补充融合可莉未重复的规则，校验 MITM 域名完整性并剔除实测触发 SSL Certificate Pinning 的域名。
 - **103516 体检**：AMDC拦截=`False`，注释规则=`16` 条；发现问题：MITM 漏配域名：htwkop-st.xiaojukeji.com, poi.map.xiaojukeji.com, travel-alioth.xiaojukeji.com
 - **可莉 体检**：AMDC拦截=`False`，注释规则=`0` 条；无结构性异常
 - **已自动执行的修复与优化**：
   - 自动补全漏配 MITM 域名：`travel-alioth.xiaojukeji.com`
+  - 剔除实测触发 SSL Certificate Pinning 的 MITM 域名：`common.diditaxi.com.cn, poi.map.xiaojukeji.com`
 
 ### 高德地图 (`amap`)
 - **融合策略**：`merge_103516_primary` — 以 103516 为主（含 AMDC 拦截与 rucu6 脚本），自动修复同名脚本冲突与方括号脚本名，并内联双方引用的外部 .jq 文件。
@@ -51,6 +56,7 @@
 - **已自动执行的修复与优化**：
   - 内联外部 jq_file: Amap.recommend.jq
   - 清洗方括号脚本名：`[高德地图]移除路线规划推广` -> `高德地图_移除路线规划推广`
+  - 镜像外部脚本防 UA 拦截：`https://rucu6.pages.dev/Scripts/amap.js` -> `scripts/vendor/rucu6_amap.js` (20651B)
   - 清洗方括号脚本名：`[高德地图]移除路线规划、导航结束页推广` -> `高德地图_移除路线规划、导航结束页推广`
   - 清洗方括号脚本名：`[高德地图]移除导航详情页底部酒店、处理附近页` -> `高德地图_移除导航详情页底部酒店、处理附近页`
   - 清洗方括号脚本名：`[高德地图]移除搜索栏推广` -> `高德地图_移除搜索栏推广`
@@ -79,17 +85,20 @@
 - **可莉 体检**：AMDC拦截=`False`，注释规则=`0` 条；发现问题：同名脚本冲突（Surge 后者覆盖前者）：移除信息流广告
 - **已自动执行的修复与优化**：
   - 清洗方括号脚本名：`[小红书]移除整体配置 ui` -> `小红书_移除整体配置_ui`
+  - 镜像外部脚本防 UA 拦截：`https://rucu6.pages.dev/Scripts/xiaohongshu.js` -> `scripts/vendor/rucu6_xiaohongshu.js` (20194B)
   - 清洗方括号脚本名：`[小红书]移除开屏广告 config` -> `小红书_移除开屏广告_config`
   - 清洗方括号脚本名：`[小红书]移除开屏广告 splash_config` -> `小红书_移除开屏广告_splash_config`
   - 清洗方括号脚本名：`[小红书]移除详情页小部件、关注页感兴趣的人` -> `小红书_移除详情页小部件、关注页感兴趣的人`
   - 清洗方括号脚本名：`[小红书]移除详情页感兴趣的人` -> `小红书_移除详情页感兴趣的人`
   - 清洗方括号脚本名：`[小红书]首页笔记标题前显示时间` -> `小红书_首页笔记标题前显示时间`
+  - 镜像外部脚本防 UA 拦截：`https://loon.103516.xyz/Script/RedNote/RedNote.feedtime.js` -> `scripts/vendor/103516_RedNote.feedtime.js` (1558B)
   - 清洗方括号脚本名：`[小红书]移除信息流广告` -> `小红书_移除信息流广告`
   - 清洗方括号脚本名：`[小红书]移除搜索页广告` -> `小红书_移除搜索页广告`
   - 清洗方括号脚本名：`[小红书]移除图片和实况照片水印` -> `小红书_移除图片和实况照片水印`
   - 清洗方括号脚本名：`[小红书]移除图片和视频水印` -> `小红书_移除图片和视频水印`
   - 清洗方括号脚本名：`[小红书]移除视频水印` -> `小红书_移除视频水印`
   - 清洗方括号脚本名：`[小红书]移除评论区实况照片水印` -> `小红书_移除评论区实况照片水印`
+  - 镜像外部脚本防 UA 拦截：`https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/xiaohongshu/xiaohongshu.js` -> `scripts/vendor/fmz200_xiaohongshu.js` (27135B)
   - 自动消解同名脚本冲突：`小红书_移除信息流广告 -> 小红书_移除信息流广告_2`
 
 ### 顺丰 (`sf`)

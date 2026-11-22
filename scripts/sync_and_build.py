@@ -10,8 +10,10 @@ import json
 import os
 import re
 import shutil
+import ssl
 import subprocess
 import sys
+import urllib.parse
 import urllib.request
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -20,15 +22,73 @@ ROOT = Path(__file__).resolve().parent.parent
 CONFIG_PATH = ROOT / "config" / "apps.json"
 UPSTREAM_DIR = ROOT / "upstream"
 MODULES_DIR = ROOT / "modules"
+VENDOR_DIR = ROOT / "scripts" / "vendor"
 ANALYSIS_PATH = ROOT / "ANALYSIS.md"
 
 LOON_UA = "Loon/906 CFNetwork/3860.100.1 Darwin/25.0.0"
+SURGE_UA = "Surge/4041"
 
 
-def http_get(url: str, timeout: int = 25) -> str:
-    req = urllib.request.Request(url, headers={"User-Agent": LOON_UA})
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
+def _ssl_context():
+    if os.environ.get("INSECURE_SSL") == "1":
+        return ssl._create_unverified_context()
+    return None
+
+
+def http_get(url: str, timeout: int = 25, ua: Optional[str] = None) -> str:
+    req = urllib.request.Request(url, headers={"User-Agent": ua or LOON_UA})
+    with urllib.request.urlopen(req, timeout=timeout, context=_ssl_context()) as resp:
         return resp.read().decode("utf-8", errors="replace")
+
+
+def vendor_filename_for_url(url: str) -> str:
+    parsed = urllib.parse.urlparse(url)
+    host = parsed.netloc.lower()
+    parts = [p for p in parsed.path.split("/") if p]
+    base = parts[-1] if parts else "script.js"
+    if host.endswith("kelee.one"):
+        prefix = "kelee"
+    elif "103516" in host:
+        prefix = "103516"
+    elif "rucu6" in host:
+        prefix = "rucu6"
+    elif host == "raw.githubusercontent.com" and parts:
+        prefix = parts[0]
+    else:
+        prefix = re.sub(r"[^A-Za-z0-9]+", "_", host).strip("_")
+    safe_base = re.sub(r"[^A-Za-z0-9._-]+", "_", base)
+    return f"{prefix}_{safe_base}"
+
+
+def mirror_script_url(url: str, repo: str, cache: Dict[str, str]) -> Tuple[str, Optional[str]]:
+    """Mirror external JS into scripts/vendor/ and return GitHub Raw URL to avoid upstream UA 403/302 blocks."""
+    if url in cache:
+        return cache[url], None
+    VENDOR_DIR.mkdir(parents=True, exist_ok=True)
+    fname = vendor_filename_for_url(url)
+    dest = VENDOR_DIR / fname
+    mirrored_url = f"https://raw.githubusercontent.com/{repo}/main/scripts/vendor/{fname}"
+
+    host = urllib.parse.urlparse(url).netloc.lower()
+    ua = LOON_UA if ("103516" in host or "kelee.one" in host) else SURGE_UA
+    note = None
+    try:
+        body = http_get(url, timeout=25, ua=ua)
+        stripped = body.lstrip()
+        if not stripped or stripped.lower().startswith(("<!doctype", "<html")):
+            raise ValueError("received HTML or empty body instead of JS")
+        dest.write_text(body, encoding="utf-8")
+        note = f"镜像外部脚本防 UA 拦截：`{url}` -> `scripts/vendor/{fname}` ({len(body)}B)"
+    except Exception as e:
+        if dest.exists() and dest.stat().st_size > 0:
+            print(f"[WARN] mirror {url} failed ({e}), using cached vendor/{fname}", file=sys.stderr)
+        else:
+            print(f"[WARN] mirror {url} failed ({e}), keeping original URL", file=sys.stderr)
+            cache[url] = url
+            return url, None
+
+    cache[url] = mirrored_url
+    return mirrored_url, note
 
 
 def normalize_regex_key(pat: str) -> str:
@@ -210,16 +270,20 @@ def convert_rewrite_line(
     if re.fullmatch(r"reject_img(\(\s*200\s*\))?", action):
         return "Map Local", f"{pat} data-type=tiny-gif status-code=200", key, notes
 
-    # 2. response.body.mock("json", "...")
-    m_mock = re.match(r'^response\.body\.mock\(\s*"([^"]+)"\s*,\s*(.+)\)$', action)
+    # 2. response.body.mock("json", "..."[, status_code])
+    m_mock = re.match(
+        r'^response\.body\.mock\(\s*"([^"]+)"\s*,\s*(.+?)(?:\s*,\s*(\d{3}))?\s*\)$',
+        action,
+    )
     if m_mock:
-        mtype, raw_payload = m_mock.groups()
+        mtype, raw_payload, status_str = m_mock.groups()
         payload = unquote_js_string(raw_payload)
         escaped = json.dumps(payload, ensure_ascii=False)
         ctype = "application/json" if mtype.lower() == "json" else "text/plain"
+        status_code = status_str or "200"
         return (
             "Map Local",
-            f'{pat} data-type=text data={escaped} status-code=200 header="Content-Type:{ctype}"',
+            f'{pat} data-type=text data={escaped} status-code={status_code} header="Content-Type:{ctype}"',
             key,
             notes,
         )
@@ -624,6 +688,7 @@ def main() -> int:
     scripthub_meta = fetch_scripthub_meta()
 
     jq_cache: Dict[str, str] = {}
+    script_mirror_cache: Dict[str, str] = {}
     all_rules: List[str] = []
     all_body_rewrites: List[str] = []
     all_map_locals: List[str] = []
@@ -713,6 +778,16 @@ def main() -> int:
                     seen_script_keys.add(sk)
                     if sp["had_brackets"]:
                         fixes.append(f"清洗方括号脚本名：`{sp['raw_tag']}` -> `{sp['name']}`")
+                    mirrored_url, mnote = mirror_script_url(sp["script_url"], repo, script_mirror_cache)
+                    if mirrored_url != sp["script_url"]:
+                        sp["params"] = sp["params"].replace(
+                            f"script-path={sp['script_url']}",
+                            f"script-path={mirrored_url}",
+                            1,
+                        )
+                        sp["script_url"] = mirrored_url
+                    if mnote:
+                        fixes.append(mnote)
                     scripts.append(sp)
 
             for h in a["mitm_hosts"]:
@@ -729,15 +804,23 @@ def main() -> int:
             ingest_source("kelee", True, True, include_kelee_scripts, True)
 
         # Auto-complete missing MITM hostnames based on final rules
+        mitm_excl = {h.lower() for h in app.get("mitm_exclude", [])}
         final_lines = body_rewrites + map_locals + [s["pattern"] for s in scripts]
         added_mitm = []
         for ln in final_lines:
             for h in extract_literal_hosts(ln):
+                if h.lower() in mitm_excl:
+                    continue
                 if not host_is_covered(h, mitm_hosts):
                     mitm_hosts.append(h)
                     added_mitm.append(h)
         if added_mitm:
             fixes.append(f"自动补全漏配 MITM 域名：`{', '.join(sorted(set(added_mitm)))}`")
+        if mitm_excl:
+            removed_mitm = [h for h in mitm_hosts if h.lower() in mitm_excl]
+            mitm_hosts = [h for h in mitm_hosts if h.lower() not in mitm_excl]
+            if removed_mitm:
+                fixes.append(f"剔除实测触发 SSL Certificate Pinning 的 MITM 域名：`{', '.join(removed_mitm)}`")
 
         script_lines, renames = assign_unique_script_names(scripts)
         if renames:

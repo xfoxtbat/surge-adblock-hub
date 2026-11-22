@@ -37,7 +37,11 @@
         "kelee": "https://kelee.one/Tool/Loon/Lpx/DiDi_remove_ads.lpx"
       },
       "strategy": "merge_103516_primary",
-      "notes": "以 103516 为主（覆盖更全），补充融合可莉未重复的规则并校验 MITM 域名完整性。"
+      "mitm_exclude": [
+        "poi.map.xiaojukeji.com",
+        "common.diditaxi.com.cn"
+      ],
+      "notes": "以 103516 为主（覆盖更全），补充融合可莉未重复的规则，校验 MITM 域名完整性并剔除实测触发 SSL Certificate Pinning 的域名。"
     },
     {
       "slug": "amap",

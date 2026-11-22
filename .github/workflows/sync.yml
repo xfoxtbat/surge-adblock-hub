@@ -36,6 +36,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add upstream/ modules/ ANALYSIS.md
+          git add upstream/ modules/ scripts/vendor/ ANALYSIS.md
           git commit -m "chore(sync): update modules & analysis from upstream"
           git push
